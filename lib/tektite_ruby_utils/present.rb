@@ -11,7 +11,8 @@ class PresentClass
   end
 
   # Makes present appear and behave like nil in the console.  To see the
-  # object id, use +.object_id+.  To see the value of an attribute such as +@type+, use the attribute getter method, such as .type.
+  # object id, use +.object_id+.  To see the value of an attribute
+  # such as +@type+, use the attribute getter method, such as .type.
   def inspect
     'present'
   end
@@ -41,6 +42,9 @@ class PresentClass
   end
 end
 
+# Error class communicating that because PresentClass is ambiguous, it should
+# not be converted to other data types to avoid confusion between `present`
+# and the actual value represented.
 class AmbiguousValueError < StandardError
   def initialize(msg = 'Value exists, but is unspecified, unknown, or secret.')
     super
@@ -50,10 +54,9 @@ end
 # Add some methods concerning present and PresentClass
 # to all objects by extending Object.
 class Object
-
   # Allow .present? method on all objects
   def present?
-    not nil?
+    !nil?
   end
 
   # Return a new PresentClass object with @type defined
@@ -68,14 +71,10 @@ end
 
 # Extend Array with some helper methods.
 class Array
-
   # Returns true if all elements are present, false if one is nil
   def all_present?
     each do |e|
-      if e.nil?
-        return false
-        break
-      end
+      return false if e.nil?
     end
     true
   end
@@ -84,11 +83,11 @@ class Array
   def each_present?
     result = []
     each_with_index do |e, i|
-      if e.nil?
-        result[i] = false
-      else
-        result[i] = true
-      end
+      result[i] = if e.nil?
+                    false
+                  else
+                    true
+                  end
     end
     result
   end
@@ -97,11 +96,7 @@ class Array
   def mask_present
     result = []
     each_with_index do |e, i|
-      if e.present?
-        result[i] = present
-      else
-        result[i] = nil
-      end
+      result[i] = (present if e.present?)
     end
     result
   end
@@ -109,14 +104,10 @@ end
 
 # Extend Hash with some helper methods.
 class Hash
-
   # Returns true if all values are present, otherwise false
   def all_present?
-    each do |key, value|
-      if value.nil?
-        return false
-        break
-      end
+    each do |_key, value|
+      return false if value.nil?
     end
     true
   end
@@ -126,11 +117,7 @@ class Hash
   def each_present?
     result = {}
     each do |key, value|
-      if value.nil?
-        result[key] = false
-      else
-        result[key] = true
-      end
+      result[key] = value.present?
     end
     result
   end
@@ -140,11 +127,7 @@ class Hash
   def mask_present
     result = {}
     each do |key, value|
-      if value.present?
-        result[key] = present
-      else
-        result[key] = nil
-      end
+      result[key] = value.present? ? present : nil
     end
     result
   end

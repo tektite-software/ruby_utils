@@ -14,7 +14,7 @@ describe 'Global methods and constants' do
   end
 
   # it 'present must return "present" when inspected' do
-  #   lambda { PRESENT.inspect }.must_output 'present'
+  #   -> { PRESENT.inspect }.must_output 'present'
   # end
 end
 
@@ -24,9 +24,9 @@ describe PresentClass do
   end
 
   it 'should not be convertable to other types' do
-    lambda { present.to_i }.must_raise AmbiguousValueError
-    lambda { present.to_a }.must_raise AmbiguousValueError
-    lambda { present.to_s }.must_raise AmbiguousValueError
+    -> { present.to_i }.must_raise AmbiguousValueError
+    -> { present.to_a }.must_raise AmbiguousValueError
+    -> { present.to_s }.must_raise AmbiguousValueError
   end
 
   it 'should by default return nil for @type' do
@@ -50,7 +50,7 @@ end
 
 describe Object do
   before do
-    @test_string = "This is a test"
+    @test_string = 'This is a test'
     @test_nil = nil
   end
 
@@ -102,7 +102,9 @@ describe Array do
 
   it 'should react properly to .mask_present' do
     @test_array.mask_present.must_be_instance_of Array
-    @test_array.mask_present.must_equal [present, present, present, present, nil, present]
+    @test_array.mask_present.must_equal [
+      present, present, present, present, nil, present
+    ]
     @test_array_2.mask_present.must_equal [present, present, present]
   end
 
@@ -133,7 +135,9 @@ describe Hash do
 
   it 'should react properly to .mask_present' do
     @test_hash.mask_present.must_be_instance_of Hash
-    @test_hash.mask_present.must_equal Hash(one: present, two: present, three: nil)
+    @test_hash.mask_present.must_equal Hash(
+      one: present, two: present, three: nil
+    )
     @test_hash_2.mask_present.must_equal Hash(alpha: nil, bravo: present)
   end
 
@@ -141,6 +145,6 @@ describe Hash do
     @test_hash.mask_present
     @test_hash.all_present?
     @test_hash.each_present?
-    @test_hash.must_equal Hash(:one => 1, :two => 2, :three => nil)
+    @test_hash.must_equal Hash(one: 1, two: 2, three: nil)
   end
 end
