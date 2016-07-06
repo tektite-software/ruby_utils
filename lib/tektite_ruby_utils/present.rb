@@ -2,11 +2,18 @@
 # that a value exists but does not represent any specific vallue or type; it
 # is ambiguous.  present should be seen as the opposite of nil.
 class PresentClass
-  attr_reader :type
+  attr_accessor :type
 
   # +type+ should be either nil (for ambiguous) or
   # the class of the object represented.
-  def initialize(type = nil)
+  #   PresentClass.new(type: String)
+  #   => present
+  #   PresentClass.new(type: String).type
+  #   => String
+  #   present.type
+  #   => nil
+  def initialize(options = {})
+    type = options[:type]
     @type = type
   end
 
@@ -46,6 +53,10 @@ end
 # not be converted to other data types to avoid confusion between `present`
 # and the actual value represented.
 class AmbiguousValueError < StandardError
+  # Creates new error instance.  Default message is below, overriding not
+  # recommended.
+  # +msg+ explains why the error is raised; similar to why you can't
+  # divide by zero.
   def initialize(msg = 'Value exists, but is unspecified, unknown, or secret.')
     super
   end
@@ -62,7 +73,7 @@ class Object
   # Return a new PresentClass object with @type defined
   # as the type of the object.
   def present_with_type
-    PresentClass.new(self.class)
+    PresentClass.new(type: self.class)
   end
 
   # Aliases :present_with_class to :present_with_type
@@ -139,4 +150,11 @@ PRESENT = PresentClass.new.freeze
 # +present+ returns PRESENT constant.
 def present
   PRESENT
+end
+
+# Add Present constant to Module in case PRESENT is
+# overriden or corrupted in the global namespace.
+module TektiteRubyUtils
+  # Set TektiteRubyUtils::Present equal to PRESENT
+  Present = PRESENT
 end

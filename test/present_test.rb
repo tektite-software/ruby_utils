@@ -13,14 +13,16 @@ describe 'Global methods and constants' do
     present.must_be_same_as PRESENT
   end
 
-  # it 'present must return "present" when inspected' do
-  #   -> { PRESENT.inspect }.must_output 'present'
-  # end
+  it 'present must return "present" when inspected' do
+    PRESENT.inspect.must_equal "present"
+    present.inspect.must_equal "present"
+    PresentClass.new.inspect.must_equal "present"
+  end
 end
 
 describe PresentClass do
   before do
-    @present_string = PresentClass.new(String)
+    @present_string = PresentClass.new(type: String)
   end
 
   it 'should not be convertable to other types' do
@@ -120,11 +122,13 @@ describe Hash do
   before do
     @test_hash = Hash(one: 1, two: 2, three: nil)
     @test_hash_2 = Hash(alpha: nil, bravo: 'two')
+    @test_hash_3 = Hash(first: 1, second: 2)
   end
 
   it 'should react properly to .all_present?' do
     @test_hash.all_present?.must_equal false
     @test_hash_2.all_present?.must_equal false
+    @test_hash_3.all_present?.must_equal true
   end
 
   it 'should react properly to .each_present?' do
@@ -146,5 +150,11 @@ describe Hash do
     @test_hash.all_present?
     @test_hash.each_present?
     @test_hash.must_equal Hash(one: 1, two: 2, three: nil)
+  end
+end
+
+describe 'TektiteRubyUtils::Present' do
+  it 'should be equal to PRESENT' do
+    TektiteRubyUtils::Present.must_be_same_as PRESENT
   end
 end

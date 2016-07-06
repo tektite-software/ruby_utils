@@ -3,7 +3,6 @@
 [![Gem Version](https://badge.fury.io/rb/tektite_ruby_utils.svg)](https://badge.fury.io/rb/tektite_ruby_utils) [![Build Status](https://travis-ci.org/tektite-software/ruby_utils.svg?branch=master)](https://travis-ci.org/tektite-software/ruby_utils) [![Code Climate](https://codeclimate.com/github/tektite-software/ruby_utils/badges/gpa.svg)](https://codeclimate.com/github/tektite-software/ruby_utils) [![Test Coverage](https://codeclimate.com/github/tektite-software/ruby_utils/badges/coverage.svg)](https://codeclimate.com/github/tektite-software/ruby_utils/coverage) [![Inline docs](http://inch-ci.org/github/tektite-software/ruby_utils.svg?branch=master)](http://inch-ci.org/github/tektite-software/ruby_utils)
 
 
-
 This gem contains a number of utilities, extensions, and helpers for Ruby to make developing applications easier and to enable better security and integration with other services.  Enjoy!  Suggestions are most welcome.
 
 ## Installation
